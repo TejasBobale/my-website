@@ -151,8 +151,7 @@
     .counter-section,
     .reasons-section,
     .missing-section,
-    .secret-section,
-    .polaroid-section {
+    .secret-section {
       padding: 120px 10%;
       position: relative;
       text-align: center;
@@ -170,8 +169,7 @@
 
     .quiz-section,
     .selfie-section,
-    .missing-section,
-    .polaroid-section {
+    .missing-section {
       background:
         linear-gradient(rgba(247, 239, 229, 0.84), rgba(247, 239, 229, 0.84)),
         var(--anniversary-bg) center / cover;
@@ -444,44 +442,76 @@
       cursor: pointer;
     }
 
-    .slider {
+    .memory-marquee {
+      display: grid;
+      gap: clamp(22px, 4vw, 42px);
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .marquee-row {
       overflow: hidden;
       width: 100%;
-      border-radius: 25px;
+      padding: 8px 0 18px;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
     }
 
-    .slides {
+    .marquee-track {
+      --marquee-gap: clamp(16px, 2.4vw, 30px);
+      --card-width: clamp(150px, calc((min(1180px, 80vw) - (var(--marquee-gap) * 4)) / 5), 215px);
       display: flex;
-      gap: 15px;
-      animation: slide 18s infinite;
+      width: max-content;
+      gap: var(--marquee-gap);
+      animation: scroll-left 32s linear infinite;
+      will-change: transform;
     }
 
-    .slides img {
-      width: min(500px, 82vw);
-      height: 600px;
-      flex: 0 0 min(500px, 82vw);
+    .marquee-row.reverse .marquee-track {
+      animation-name: scroll-right;
+    }
+
+    .marquee-row:hover .marquee-track {
+      animation-play-state: paused;
+    }
+
+    .memory-card {
+      flex: 0 0 var(--card-width);
+      overflow: hidden;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 18px 42px rgba(86, 35, 54, 0.18);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .memory-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 24px 55px rgba(255, 79, 143, 0.28);
+    }
+
+    .memory-card img {
+      width: 100%;
+      aspect-ratio: 275 / 330;
       object-fit: cover;
-      border-radius: 20px;
     }
 
-    @keyframes slide {
-      0%,
-      15% {
+    @keyframes scroll-left {
+      from {
+        transform: translateX(calc(-50% - (var(--marquee-gap) / 2)));
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes scroll-right {
+      from {
         transform: translateX(0);
       }
 
-      30%,
-      45% {
-        transform: translateX(-515px);
-      }
-
-      60%,
-      75% {
-        transform: translateX(-1030px);
-      }
-
-      100% {
-        transform: translateX(0);
+      to {
+        transform: translateX(calc(-50% - (var(--marquee-gap) / 2)));
       }
     }
 
@@ -507,8 +537,7 @@
       color: #ff4f8f;
     }
 
-    .reasons-grid,
-    .polaroid-grid {
+    .reasons-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
@@ -577,39 +606,6 @@
       width: min(700px, 100%);
       margin: auto;
       border-radius: 20px;
-    }
-
-    .polaroid-grid {
-      gap: 30px;
-    }
-
-    .polaroid {
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      transform: rotate(-2deg);
-      transition: 0.3s;
-    }
-
-    .polaroid:nth-child(even) {
-      transform: rotate(2deg);
-    }
-
-    .polaroid:hover {
-      transform: scale(1.05);
-    }
-
-    .polaroid img {
-      width: 100%;
-      height: 320px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-    .polaroid p {
-      margin-top: 12px;
-      font-weight: 600;
     }
 
     .ending-section {
@@ -721,8 +717,7 @@
         flex-direction: column;
       }
 
-      .reasons-grid,
-      .polaroid-grid {
+      .reasons-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -739,8 +734,7 @@
       .counter-section,
       .reasons-section,
       .missing-section,
-      .secret-section,
-      .polaroid-section {
+      .secret-section {
         padding: 90px 6%;
       }
 
@@ -780,8 +774,7 @@
         margin-left: 0;
       }
 
-      .reasons-grid,
-      .polaroid-grid {
+      .reasons-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1000,14 +993,35 @@
   <section class="selfie-section">
     <h2 class="section-title">Our Favorite Moments</h2>
 
-    <div class="slider">
-      <div class="slides" id="slides">
-        <img src="photo1.jpg" alt="Favorite moment 1">
-        <img src="photo2.jpg" alt="Favorite moment 2">
-        <img src="photo3.jpg" alt="Favorite moment 3">
-        <img src="photo4.jpg" alt="Favorite moment 4">
-        <img src="photo5.jpg" alt="Favorite moment 5">
-        <img src="photo6.jpg" alt="Favorite moment 6">
+    <div class="memory-marquee" aria-label="Scrolling anniversary memories">
+      <div class="marquee-row">
+        <div class="marquee-track">
+          <article class="memory-card"><img src="memory-01.jpeg" alt="Memory dated 19 Oct 2025"></article>
+          <article class="memory-card"><img src="memory-02.jpeg" alt="Memory dated 28 May 2026"></article>
+          <article class="memory-card"><img src="memory-03.jpeg" alt="Memory dated 2 August 2025"></article>
+          <article class="memory-card"><img src="memory-04.jpeg" alt="Memory dated 15 Dec 2025"></article>
+          <article class="memory-card"><img src="memory-05.jpeg" alt="Memory dated 16 Nov 2025"></article>
+          <article class="memory-card"><img src="memory-01.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-02.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-03.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-04.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-05.jpeg" alt="" aria-hidden="true"></article>
+        </div>
+      </div>
+
+      <div class="marquee-row reverse">
+        <div class="marquee-track">
+          <article class="memory-card"><img src="memory-06.jpeg" alt="Memory dated 28 May 2026"></article>
+          <article class="memory-card"><img src="memory-07.jpeg" alt="Memory dated 7 Nov 2025"></article>
+          <article class="memory-card"><img src="memory-08.jpeg" alt="Memory dated 15 Feb 2026"></article>
+          <article class="memory-card"><img src="memory-09.jpeg" alt="Memory dated 21 March 2026"></article>
+          <article class="memory-card"><img src="memory-10.jpeg" alt="Memory dated 14 July 2025"></article>
+          <article class="memory-card"><img src="memory-06.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-07.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-08.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-09.jpeg" alt="" aria-hidden="true"></article>
+          <article class="memory-card"><img src="memory-10.jpeg" alt="" aria-hidden="true"></article>
+        </div>
       </div>
     </div>
   </section>
@@ -1092,32 +1106,6 @@
       <video controls>
         <source src="anniversary.mp4" type="video/mp4">
       </video>
-    </div>
-  </section>
-
-  <section class="polaroid-section">
-    <h2 class="section-title">Memory Wall</h2>
-
-    <div class="polaroid-grid">
-      <div class="polaroid">
-        <img src="photo1.jpg" alt="My favorite smile">
-        <p>My Favorite Smile</p>
-      </div>
-
-      <div class="polaroid">
-        <img src="photo2.jpg" alt="Our first selfie">
-        <p>Our First Selfie</p>
-      </div>
-
-      <div class="polaroid">
-        <img src="photo3.jpg" alt="Forever us">
-        <p>Forever Us</p>
-      </div>
-
-      <div class="polaroid">
-        <img src="photo4.jpg" alt="My safe place">
-        <p>My Safe Place</p>
-      </div>
     </div>
   </section>
 
